@@ -317,7 +317,7 @@ class ControllerExtensionModuleAbandonedcarts extends Controller {
                 $data['menus'][] = array(
                     'id'       => 'menu-abandonedcarts',
                     'icon'	   => 'fa fa-shopping-cart fa-fw', 
-                    'name'	   => 'Abandoned Carts <span class="label label-danger">'. $AB_count->row['total'] . '</span>',
+                    'name'	   => 'Terk Edilmiş Siparişler <span class="label label-danger">'. $AB_count->row['total'] . '</span>',
                     'href'     => $this->url->link('extension/module/abandonedcarts', $this->data['token_addon'], true),
                     'children' => array()
                 );	
