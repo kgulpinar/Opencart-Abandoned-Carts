@@ -1,0 +1,102 @@
+<table class="table">
+    <tr>
+        <td colspan="2">
+            <h4>{{ text_main_settings }}</h4>   
+        </td>
+    </tr>
+    <tr>
+        <td class="col-xs-3">
+            <h5 class="option_title">{{ text_status }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_status_help }}</span>
+        </td>
+        <td class="col-xs-9">
+            <div class="col-md-4">
+                <select name="{{ moduleName }}[Enabled]" class="form-control">
+                  <option value="yes" {{ moduleData.Enabled == 'yes' ? 'selected' }}>{{ text_enabled }}</option>
+                  <option value="no"  {{ moduleData['Enabled'] != 'yes' ? 'selected' }}>{{ text_disabled }}</option>
+                </select>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="col-xs-3">
+            <h5 class="option_title">{{ text_dateformat }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_dateformat_help }}</span>
+        </td>
+        <td class="col-xs-9">
+            <div class="col-md-4">
+                <select name="{{ moduleName }}[DateFormat]" class="form-control">
+                  <option value="d-m-Y" {{ moduleData.DateFormat == 'd-m-Y' ? 'selected' }}>dd-mm-yyyy</option>
+                  <option value="m-d-Y" {{ moduleData.DateFormat == 'm-d-Y' ? 'selected' }}>mm-dd-yyyy</option>
+                  <option value="Y-m-d" {{ moduleData.DateFormat == 'Y-m-d' ? 'selected' }}>yyyy-mm-dd</option>
+                  <option value="Y-d-m" {{ moduleData.DateFormat == 'Y-d-m' ? 'selected' }}>yyyy-dd-mm</option>
+                </select>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="col-xs-3">
+            <h5 class="option_title">{{ text_send_bcc }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_send_bcc_help }}</span>
+        </td>
+        <td class="col-xs-9">
+            <div class="col-md-4">
+                <select name="{{ moduleName }}[BCC]" class="form-control">
+                  <option value="yes" {{ moduleData.BCC == 'yes' ? 'selected' }}>{{ text_enabled }}</option>
+                  <option value="no" {{ moduleData.BCC != 'yes' ? 'selected' }}>{{ text_disabled }}</option>
+                </select>
+            </div>
+        </td>
+    </tr> 
+    <tr>
+        <td class="col-xs-3">
+            <h5 class="option_title">{{ text_expired_coupons }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_expired_coupons_help }}</span>
+        </td>
+        <td class="col-xs-9">
+            <div class="col-md-4">
+                 <a class="btn btn-default btn-mini btn-remove-expired" onClick="removeExpiredCoupons();"><i class="fa fa-info-circle"></i>&nbsp;{{ btn_clear_expired_coupons }}</a>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <br />
+            <h4>{{ text_module_view_settings }}</h4>   
+        </td>
+    </tr>
+    <tr>
+        <td class="col-xs-3">
+            <h5 class="option_title">{{ text_menu_widget }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_menu_widget_help }}</span>
+        </td>
+        <td class="col-xs-9">
+            <div class="col-md-4">
+                <select name="{{ moduleName }}[MenuWidget]" class="form-control">
+                  <option value="yes" {{ moduleData.MenuWidget == 'yes' ? 'selected' }}>{{ text_enabled }}</option>
+                  <option value="no" {{ moduleData.MenuWidget != 'yes' ? 'selected' }}>{{ text_disabled }}</option>
+                </select>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <br />
+            <h4>{{ text_experimental_settings }}</h4>   
+        </td>
+    </tr>
+    <tr>
+        <td class="col-xs-3">
+            <h5 class="option_title">{{ text_applytaxes }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_applytaxes_help }}</span>
+        </td>
+        <td class="col-xs-9">
+            <div class="col-md-4">
+                <select name="{{ moduleName }}[Taxes]" class="form-control">
+                  <option value="yes" {{ moduleData.Taxes == 'yes' ? 'selected' }}>{{ text_enabled }}</option>
+                  <option value="no" {{ moduleData.Taxes != 'yes' ? 'selected' }}>{{ text_disabled }}</option>
+                </select>
+            </div>
+        </td>
+    </tr>
+</table>

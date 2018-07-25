@@ -1,0 +1,34 @@
+<div class="tabbable tabs-left" id="abcart_tabs">
+    <ul class="nav nav-tabs mail-list">
+        <li class="static"><a class="addNewMailTemplate"><i class="fa fa-plus"></i> {{ btn_add_template }}</a></li>
+        {% if moduleData.MailTemplate %}
+            {% for mailtemplate in moduleData.MailTemplate %}
+            <li>
+                <a href="#mailtemplate_{{ mailtemplate.id }}" data-toggle="tab" data-mailtemplate-id="{{ mailtemplate.id }}"><i class="fa fa-pencil-square-o"></i> {{ mailtemplate.Name ?: text_tempalte ~ ' ' ~ mailtemplate.id }}<i class="fa fa-minus-circle removeMailTemplate"></i> <input type="hidden" name="{{ moduleName }}[MailTemplate][{{ mailtemplate.id }}][id]" value="{{ mailtemplate.id }}" />
+                </a>
+            </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    
+    <div class="tab-content mail-settings">
+    {% if moduleData.MailTemplate %}
+      {% for mailtemplate in moduleData.MailTemplate %}
+        {{ include("#{modulePath}/tab_mailtab.twig") }}
+      {% endfor %}
+    {% endif %}
+    </div>
+</div>
+
+<script type="text/javascript" >
+// Show the editor
+{% if moduleData.MailTemplate %}
+  {% for mailtemplate in moduleData.MailTemplate %}
+    {% for language in languages %}
+			$('#message_{{ mailtemplate.id }}_{{ language.language_id }}').summernote({
+				height: 350
+			});
+    {% endfor %}
+  {% endfor %}
+{% endif %} 
+</script>

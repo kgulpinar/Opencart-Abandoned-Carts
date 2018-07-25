@@ -1,0 +1,143 @@
+{% set notGivenCoupons = givenCoupons - usedCoupons %}
+{% set guestCustomers = totalCustomers - registeredCustomers %}
+<script type="text/javascript" src="//www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load("visualization", "1", {packages:["corechart"]});
+
+function drawChartCoupons() {
+  var data = google.visualization.arrayToDataTable([
+	  ['{{ text_type }}', '{{ text_count }}'],
+	  ['{{ text_used_coupons }}',	{{ usedCoupons }}],
+	  ['{{ text_notused_coupons }}',	{{ notGivenCoupons }}]
+	]);
+	
+  var options = {
+	  title: '{{ text_total_coupons }} {{ givenCoupons }}',
+	  backgroundColor: 'transparent',
+	  is3D: true,
+	  chartArea: {top:50,bottom:0,width:'100%'}
+	};
+    
+	var chart = new google.visualization.PieChart(document.getElementById('chartCoupons'));
+	chart.draw(data, options);
+}
+
+function drawChartCustomers() {
+	var data = google.visualization.arrayToDataTable([
+	  ['{{ text_type }}', '{{ text_count }}'],
+	  ['{{ text_registerd_customers }}', {{ registeredCustomers }}],
+	  ['{{ text_guest_customers }}', {{ guestCustomers }}]
+	]);
+    
+	var options = {
+	  title: '{{ text_total_carts }} {{ totalCustomers }}',
+	  backgroundColor: 'transparent',
+	  is3D: true,
+	  chartArea: {top:50,bottom:0,width:'100%'}
+	};
+	
+  var chart = new google.visualization.PieChart(document.getElementById('chartCustomers'));
+	chart.draw(data, options);
+}
+
+if (typeof drawChartCoupons == 'function') { 
+    google.setOnLoadCallback(drawChartCoupons);
+}
+
+if (typeof drawChartCustomers == 'function') { 
+    google.setOnLoadCallback(drawChartCustomers);
+}
+
+$('a[href=#ab_analytics]').on('click', function() {
+	if (typeof drawChartCoupons == 'function') { 
+		setTimeout(drawChartCoupons, 100);
+	}
+	if (typeof drawChartCustomers == 'function') { 
+		setTimeout(drawChartCustomers, 100);
+	}
+});
+
+$(window).resize(function(){
+	drawChartCoupons();
+	drawChartCustomers();
+});
+</script>
+
+<div class="row-fluid">
+    <div class="col-xs-6">
+      <div id="chartCoupons" class="well" style="height:300px;overflow:hidden;"></div>
+	    <div id="chartCustomers" class="well" style="height:300px;overflow:hidden;"></div>
+     </div>
+    
+    <div class="col-xs-6">
+        <table class="table-hover table table-striped">
+            <thead>
+                <tr>
+                    <th width="70%">{{ text_coupons }}</th>
+                    <th>{{ text_count }}</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <tr>
+                    <td><i class="fa fa-gift"></i> {{ text_total_coupons }}</td>
+                    <td>{{ givenCoupons }}</td>
+                </tr>
+                <tr>
+                    <td><i class="fa fa-ticket"></i> {{ text_notused_coupons }}</td>
+                    <td>{{ notGivenCoupons }}</td>
+                </tr>
+                <tr>
+                    <td><i class="fa fa-check-square-o"></i> {{ text_used_coupons }}</td>
+                    <td>{{ usedCoupons }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table class="table-hover table table-striped">
+            <thead>
+                <tr>
+                    <th width="70%">{{ text_abandoned_carts }}</th>
+                    <th>{{ text_count }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><i class="fa fa-list-alt"></i> {{ text_total_carts_2 }}</td>
+                    <td>{{ totalCustomers }}</td>
+                </tr>
+                <tr>
+                    <td><i class="fa fa-eye"></i> {{ text_registerd_customers }}</td>
+                    <td>{{ registeredCustomers }}</td>
+                </tr>
+                <tr>
+                    <td><i class="fa fa-eye-slash"></i> {{ text_guest_customers }}</td>
+                    <td>{{ guestCustomers }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table class="table-hover table table-striped">
+            <thead>
+                <tr>
+                    <th width="70%">{{ text_last_visited_carts }}</th>
+                    <th>{{ text_count }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if mostVisitedPages %}
+                  {% for result in mostVisitedPages %}
+                  <tr>
+                      <td><i class="fa fa-file"></i> ...{{ result.last_page|slice(-45) }}</td>
+                      <td>{{ result.count }}</td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                      <td colspan="3" class="text-center">{{ text_no_results }}</td>
+                  </tr>
+                {% endif %}
+            </tbody>
+        </table>  
+    </div>
+</div>

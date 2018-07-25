@@ -1,0 +1,229 @@
+{% set mailtemplate_name = moduleName ~ '[MailTemplate][' ~ mailtemplate.id ~ ']' %}
+{% set mailtemplate_data = moduleData.MailTemplate[mailtemplate.id] ?: [] %}
+<div id="mailtemplate_{{ mailtemplate.id }}" class="tab-pane templates" style="width:99%;overflow:hidden;">
+	<div class="row removable">
+	  <div class="col-md-3">
+        <h5 class="option_title">{{ text_template }} {{ mailtemplate.id }} {{ text_status_small }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_template_help }}</span>
+      </div>
+      <div class="col-md-3">
+        <select id="Checker" name="{{ mailtemplate_name }}[Enabled]" class="form-control">
+              <option value="yes" {{ mailtemplate_data.Enabled == 'yes' ? 'selected' }}>{{ text_enabled }}</option>
+              <option value="no"  {{ mailtemplate_data.Enabled != 'yes' ? 'selected' }}>{{ text_disabled }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row removable">
+      <br />
+      <div class="col-md-3">
+        <h5 class="option_title">{{ text_template }} {{ mailtemplate.id }} {{ text_name_small }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_name_help }}</span>
+      </div>
+      <div class="col-md-3">
+        <input type="text" class="form-control" name="{{ mailtemplate_name }}[Name]" value="{{ mailtemplate_data.Name ?: text_template ~ ' ' ~ mailtemplate.id }}" />
+      </div>
+    </div>
+    <div class="row removable">
+      <br />
+      <div class="col-md-3">
+        <h5 class="option_title">{{ text_message_delay }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_message_delay_help }}</span>
+      </div>
+      <div class="col-md-3">
+      	<div class="input-group">
+          <input type="text" class="form-control" name="{{ mailtemplate_name }}[Delay]" value="{{ (mailtemplate_data.Delay > -1) ? mailtemplate_data.Delay : 3 }}" />
+         <span class="input-group-addon">{{ text_days_small }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <br />
+      <div class="col-md-3">
+        <h5 class="option_title">{{ text_type_of_discount }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_type_of_discount_help }}</span>
+      </div>
+      <div class="col-md-3">
+        <select name="{{ mailtemplate_name }}[DiscountType]" class="discountTypeSelect form-control"> 
+            <option value="P" {{ mailtemplate_data.DiscountType == 'P' ? 'selected' }}>{{ text_percentage }}</option>
+            <option value="F" {{ mailtemplate_data.DiscountType == 'F' ? 'selected' }}>{{ text_fixed_amount }}</option>
+            <option value="N" {{ (not mailtemplate_data.DiscountType or mailtemplate_data.DiscountType == 'N') ? 'selected' }}>{{ text_no_discount }}</option>
+        </select>
+      </div>
+    </div>
+    <br />
+    <div class="discountSettings">
+        <div class="row">
+          <div class="col-md-3">
+            <h5 class="option_title">{{ text_discount }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_discount_help }}</span>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" name="{{ mailtemplate_name }}[Discount]" value="{{ mailtemplate_data.Discount ?: 10 }}">
+                <span class="input-group-addon">
+                   <span style="display:none;" id="currencyAddon">{{ currency }}</span><span style="display:none;" id="percentageAddon">%</span>
+               </span>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <h5 class="option_title">{{ text_total_amount }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_total_amount_help }}</span>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" name="{{ mailtemplate_name }}[TotalAmount]" value="{{ mailtemplate_data.TotalAmount ? 20 }}">
+                <span class="input-group-addon">{{ currency }}</span>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <h5 class="option_title">{{ text_discount_validity }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_discount_validity_help }}</span>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" value="{{ mailtemplate_data.DiscountValidity ? mailtemplate_data.DiscountValidity|number_format : 7 }}" name="{{ mailtemplate_name }}[DiscountValidity]">
+                <span class="input-group-addon">{{ text_days_small }}</span>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <h5 class="option_title">{{ text_apply_discount }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_apply_discount_help }}</span>
+          </div>
+          <div class="col-md-3">
+            <select class="form-control" name="{{ mailtemplate_name }}[DiscountApply]" > 
+                <option value="all_products" {{ mailtemplate_data.DiscountApply == "all_products" ? "selected" }}>{{ text_all_products }}</option>
+                <option value="cart_products" {{ mailtemplate_data.DiscountApply == "cart_products" ? "selected" }}>{{ text_specific_products }}</option>
+            </select>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <h5 class="option_title">{{ text_discount_free_shipping }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_discount_free_shipping_help }}</span>
+          </div>
+          <div class="col-md-3">
+            <select class="form-control" name="{{ mailtemplate_name }}[DiscountShipping]" > 
+                <option value="1" {{ mailtemplate_data.DiscountShipping == '1' ? 'selected' }}>{{ text_yes }}</option>
+                <option value="0"  {{ mailtemplate_data.DiscountShipping != '1' ? 'selected' }}>{{ text_no }}</option>
+            </select>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <h5 class="option_title">{{ text_discount_customer_login }}</h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_discount_customer_login_help }}</span>
+          </div>
+          <div class="col-md-3">
+            <select class="form-control" name="{{ mailtemplate_name }}[DiscountCustomerLogin]" > 
+                <option value="1" {{ mailtemplate_data.DiscountCustomerLogin == '1' ? 'selected' }}>{{ text_yes }}</option>
+                <option value="0"  {{ mailtemplate_data.DiscountCustomerLogin != '1' ? 'selected' }}>{{ text_no }}</option>
+            </select>
+          </div>
+        </div>
+    </div>
+    <br />
+	<div class="row">
+      <div class="col-md-3">
+        <h5 class="option_title">{{ text_product_dimensions }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_product_dimens_help }}</span>
+      </div>
+      <div class="col-md-3">
+        <div class="input-group">
+           <span class="input-group-addon">{{ text_width }}&nbsp;</span> <input class="form-control" id="appendedInput" type="text" name="{{ mailtemplate_name }}[ProductWidth]" value="{{ mailtemplate_data.ProductWidth ?: 60 }}">
+          <span class="input-group-addon">px</span>
+        </div>
+        <br />
+        <div class="input-group">
+            <span class="input-group-addon">{{ text_height }}</span> <input class="form-control" id="appendedInput" type="text" name="{{ mailtemplate_name }}[ProductHeight]" value="{{ mailtemplate_data.ProductHeight ?: 60 }}">
+          <span class="input-group-addon">px</span>
+        </div>
+      </div>
+    </div>
+    <hr />
+	<div class="row">
+      <div class="col-md-3">
+        <h5 class="option_title">{{ text_message_customer }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_message_customer_help }}</span>
+      </div>
+      <div class="col-md-9">
+        <ul class="nav nav-tabs mailtemplate_tabs">
+          {% for language in languages %}
+            {% set flag_url = 'language/' ~ language.code ~ '/' ~ language.code ~ '.png' %}
+            <li {{ loop.first ? 'class="active"' }}><a href="#tab-{{ mailtemplate.id }}-{{ language.language_id }}" data-toggle="tab"><img src="{{ flag_url }}"/> {{ language.name }}</a></li>
+          {% endfor %}
+        </ul>	
+        <div class="tab-content">
+          {% for language in languages %}
+          <div id="tab-{{ mailtemplate.id }}-{{ language.language_id }}" language-id="{{ language.language_id }}" class="row-fluid tab-pane language {{ loop.first ? 'active' }}">
+            <div class="row">
+              <div class="col-md-7">
+                <input placeholder="Mail subject" type="text" class="form-control" name="{{ mailtemplate_name }}[Subject][{{ language.language_id }}]" value="{{ mailtemplate_data.Subject[language.language_id] ?: text_template_sample }}" />
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-12">
+                <textarea class="mailMessageText" id="message_{{ mailtemplate.id }}_{{ language.language_id }}" name="{{ mailtemplate_name }}[Message][{{ language.language_id }}]">
+                  {{ mailtemplate_data.Message[language.language_id] ?: '<table style="width:100%"><tbody><tr><td align="center"><table style="width:650px;margin:0 auto;border:1px solid #f0f0f0;padding:10px;line-height:1.8"><tbody><tr><td>' ~ column_text_template ~ '</td></tr></tbody></table><table style="width:650px;margin:0 auto;line-height:1.8"><tbody><tr><td><div style="float:right;font-size:11px;">{unsubscribe_link}</div></td></tr></tbody></table></td></tr></tbody></table>' }}
+                </textarea>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+	<div class="row removable">
+	  <br />
+      <div class="col-md-3">
+        <h5 class="option_title">{{ text_remove_empty_records }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_remove_empty_help }}</span>
+      </div>
+	  <div class="col-md-3">
+        <select id="Checker" name="{{ mailtemplate_name }}[RemoveEmptyRecords]" class="form-control">
+          <option value="yes" {{ mailtemplate_data.RemoveEmptyRecords == 'yes' ? 'selected' }}>{{ text_enabled }}</option>
+          <option value="no" {{ mailtemplate_data.RemoveEmptyRecords != 'yes' ? 'selected' }}>{{ text_disabled }}</option>
+        </select>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3">
+        <h5 class="option_title">{{ text_additional_options }}</h5>
+        <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_additional_options_help }}</span>
+      </div>
+      <div class="col-md-6">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="{{ mailtemplate_name }}[RemoveAfterSend]" value="yes" {{ mailtemplate_data.RemoveAfterSend ? 'checked' }}/> {{ text_remove_email_after_sending }}
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="{{ mailtemplate_name }}[SkipOutOfStock]" value="yes" {{ mailtemplate_data.SkipOutOfStock ? 'checked' }}/> {{ text_skip_out_of_stock }}
+            </label>
+        </div>
+      </div>
+    </div>
+    {% if newAddition %}
+    <script type="text/javascript">
+        {% for language in languages %}
+            $('#message_{{ mailtemplate.id }}_{{ language.language_id }}').summernote({
+                    height: 320
+            });
+        {% endfor %}
+        selectorsForDiscount();
+    </script>
+    {% endif %}
+</div>

@@ -1,0 +1,37 @@
+<div id="SendReminderSuccess"></div>
+
+<form id="SendReminderCustomForm">
+    <input type="hidden" name="ABcart_id" value="{{ id }}" />
+    <input type="hidden" name="AB_store" value="{{ store_id }}" />
+    <input type="hidden" name="AB_template_id" value="{{ mailtemplate.id }}" />
+    <input type="hidden" name="AB_language_id" value="{{ language_id }}" />
+    <input type="hidden" name="AB_email" id="customer_email" value="{{ result.customer_info.email ?: '' }}" />
+    
+    <div class="row">
+        <div class="col-xs-3">
+            <label>To: <strong>{{ result.customer_info.email ?: '' }}</strong></label>
+        </div>
+        <div class="col-xs-3">
+            <label>Name: <strong>{{ result.customer_info.firstname ~ " " ~ result.customer_info.lastname }}</strong></label>
+        </div>
+        <div class="col-xs-3">
+            <label>Phone: <strong>{{ result.customer_info.telephone }}</strong></label>
+        </div>
+    </div>
+    
+    {% if mailtemplate.id %}
+    <div class="row">
+        <div class="col-xs-12">
+          {{ include("#{modulePath}/tab_mailtab.twig") }}
+        </div>
+    </div>
+    {% endif %}
+</form>
+
+<script type="text/javascript">
+var language_id = '{{ language_id }}';
+
+$('#SendReminderCustomForm .removable').remove();
+$('#SendReminderCustomForm .mailtemplate_tabs a[href="#tab-{{ mailtemplate.id }}-' + language_id + '"]').tab('show');
+$('#SendReminderCustomForm .mailtemplate_tabs a[href="#tab-{{ mailtemplate.id }}-' + language_id + '"]').parent().siblings().hide();
+</script>

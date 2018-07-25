@@ -1,0 +1,20 @@
+<div id="abandonedCartsWrapper{{ store.store_id }}"> </div>
+
+<!-- SendReminderModal -->
+<div class="modal fade" id="sendReminderModal" tabindex="-3" role="dialog" aria-labelledby="sendReminderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 90% !important;margin: 20px auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ text_close }}</span></button>
+              <h4 class="modal-title" id="sendReminderModalLabel">{{ text_send_reminder }}</h4>
+            </div>
+            
+            <div class="modal-body" style="overflow:auto;" id="sendReminderModalBody"></div>
+            
+            <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> {{ text_close }}</button>
+              <button class="btn btn-primary" data-loading-text="Sending..." id="sendMail"><i class="fa fa-envelope-square"></i> {{ text_send_mail }}</button>
+            </div>
+        </div>
+     </div>
+</div>

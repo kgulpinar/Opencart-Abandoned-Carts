@@ -1,0 +1,167 @@
+<div>
+    <div style="float:right;padding: 5px;">
+        <a onclick="removeAllEmpty()" class="btn btn-sm btn-warning"><i class="fa fa-file-o"></i>&nbsp;&nbsp;{{ text_remove_all_empty_records }}</a>&nbsp;<a onclick="removeAll()" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;{{ text_remove_all }}</a> 
+        </div>
+    <ul class="nav nav-pills filter" role="tablist">
+      <li role="presentation" {{ forFilter == 'default' ? 'class="active"' }}><a href="{{ filterURL }}&notified=0"><i class="fa fa-circle-o"></i>&nbsp;<strong>{{ text_default_ac_tab_name }}</strong></a></li>
+      <li role="presentation" {{ forFilter == 'notified' ? 'class="active"' }}><a href="{{ filterURL }}&notified=1"><i class="fa fa-circle"></i>&nbsp;<strong>{{ text_already_notified_tab_name }}</strong></a></li>
+      <li role="presentation" {{ forFilter == 'ordered' ? 'class="active"' }}><a href="{{ filterURL }}&ordered=1"><i class="fa fa-check"></i>&nbsp;<strong>{{ text_ordered_tab_name }}</strong></a></li>
+    </ul>
+   </div>
+<br />
+<table id="abandonedCartsWrapper{{ store_id }}" class="table table-bordered table-hover AbCartsTable" width="100%">
+    <thead>
+        <tr class="table-header">
+            <td class="left" width="5%"><strong class="btn-send" data-toggle="tooltip" data-placement="left" title="{{ helper_id }}">{{ text_ID_number }}</strong></td>
+            <td class="left" width="20%"><strong class="btn-send" data-toggle="tooltip" title="{{ helper_customer }}">{{ text_customer_info }}</strong></td>
+            <td class="left" width="25%"><strong class="btn-send" data-toggle="tooltip" title="{{ helper_shopping_cart }}">{{ text_shopping_cart_info }}</strong></td>
+            <td class="left" width="15%"><strong class="btn-send" data-toggle="tooltip" title="{{ helper_date_time_info }}">{{ text_date_time_info }}</strong></td>
+            <td class="left" width="15%" style="white-space: normal;" ><strong class="btn-send" data-toggle="tooltip" title="{{ helper_last_page }}">{{ text_last_visited_page }}</strong></td>
+            <td class="left" width="10%"><strong class="btn-send" data-toggle="tooltip" title="{{ helper_ip_info }}">{{ text_ip_info }}</strong></td>
+            <td class="left" width="10%"><strong class="btn-send" data-toggle="tooltip" title="{{ helper_actions }}">{{ text_status_actions }}</strong></td>
+        </tr>
+    </thead>
+    {% if sources %}
+		{% for ab in sources %}
+        <tbody>
+            <tr>
+                <td class="left">
+                    {{ ab.id }}
+                </td>
+                <td>
+                    <table class="table table-bordered">
+                        {% if not ab.customer_info %}
+                        <tr><td class="name"><i class="fa fa-user"></i> {{ text_not_provided }}</td></tr>
+						<tr><td class="email"><i class="fa fa-envelope-o"></i> {{ text_not_provided }}</td></tr>
+						<tr><td class="telephone"><i class="fa fa-phone"></i> {{ text_not_provided }}</td></tr>
+                        <tr><td class="language"><i class="fa fa-flag"></i> {{ text_not_provided }}</td></tr>
+                        <tr><td class="language"><i class="fa fa-book"></i> {{ text_guest_label }}</td></tr>
+                       	{% else %}
+						<tr>
+                            <td class="name">
+                                <i class="fa fa-user"></i>
+                                {% if not (ab.customer_info.firstname and ab.customer_info.lastname) %}
+                                  (not provided)
+                                {% endif %}
+                                {{ ab.customer_info.firstname ?: '' }}
+                                &nbsp;
+                                {{ ab.customer_info.lastname ?: '' }}
+                            </td>
+                        </tr>
+						<tr>
+                            <td class="email">
+                                <i class="fa fa-envelope-o"></i> {{ ab.customer_info.email ?: '(not provided)' }}
+                            </td>
+                        </tr>
+						<tr>
+                            <td class="telephone">
+                                <i class="fa fa-phone"></i> {{ ab.customer_info.telephone ?: '(not provided)' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="language">
+                              <i class="fa fa-flag"></i> {{ text_language_label }} {{ ab.customer_info.language ?: '(not provided)' }}{% if ab.customer_info.lang_image %} <div class="btn btn-xs btn-default" style="float:right;"><img src="{{ ab.customer_info.lang_image }}" style="margin-top:-2px;" /></div> {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="language">
+                                <i class="fa fa-book"></i> 
+                                {% if ab.customerCheck %}
+                                {{ text_registed_customer_label }} <a href='index.php?route={{ customer_url }}&{{ token_addon }}&customer_id={{ ab.customerCheck.customer_id }}' target='_blank' class='btn btn-xs btn-default' data-toggle='tooltip' title='{{ text_customer_more_helper }}' style='float:right;'><i class='fa fa-eye'></i> {{ text_more_word }}</a> 
+                                {% else %}
+                                {{ text_guest_customer_label }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                     </table>
+                </td>
+                <td>
+                    <table class="table table-bordered">
+                      {% if ab.cart %}
+                        {% for product in ab.cart %}
+                          <tr>
+                              <script>
+                              $( "#picture{{ loop.index }}" ).mouseleave(function() { $("#picture-hover{{ loop.index }}").fadeOut( 200 ); });
+                              $( "#picture{{ loop.index }}" ).mouseenter(function() { $("#picture-hover{{ loop.index }}").fadeIn( 200 ); });
+                              </script>
+                              <td width="70%" class="name">
+                                <div id="picture{{ loop.index }}" style="float:left;padding-right:3px;"><a href="../index.php?route=product/product&product_id={{ product.product_id }}" target="_blank">
+                                      <div id="picture-hover{{ loop.index }}" style="position:absolute;z-index:99999;padding-top:18px;display:none;"><img src="{{ product.bigger_thumb }}" class="img-polaroid img-hover" /></div>
+                                      <img src="{{ product.image_thumb }}" /></a>
+                                  </div>
+                                  <a href="{{ store_data.url }}index.php?route=product/product&product_id={{ product.product_id }}" target="_blank">{{ product.name }}</a>
+                                  <div>
+                                      {% for option in product.option %}
+                                      - <small>{{ option.name }} {{ option.value }}</small><br />
+                                      {% endfor %}
+                                  </div>
+                              </td>
+                              <td width="15%" class="quantity">x&nbsp;{{ product.quantity }}</td>
+                              <td width="15%" class="price">{{ product.price_formatted }}</td>
+                          </tr>
+                        {% endfor %}
+                        <tr>
+                            <td width="70%"><small>{{ text_total }}</small></td>
+                            <td width="15%"><small>x&nbsp;{{ ab.cart_total_quantity }}</small></td>
+                            <td width="15%"><small>{{ ab.cart_total_price_formatted }}</small></td>
+                        </tr>
+                      {% endif %}
+                    </table>
+                </td>
+                <td>
+                  {{ text_first_visit }}<br />{{ ab.date_created }}<br /><br />
+                  {{ text_last_visit }}<br />{{ ab.date_modified }}<br /><br />
+                	{{ text_total_time_spent }}<br />{{ ab.time_spent }}
+                </td>
+                <td> 
+                    <a href="{{ last_accessed_url ~ ab.last_page }}" target="_blank">{{ ab.last_page|slice(-30) }}</a> 
+                </td>
+                <td> 
+                    {{ ab.ip }} 
+                    <br /><br />
+                    <a class="btn btn-xs btn-default btn-send" href="http://www.checkip.com/ip/{{ ab.ip }}" data-toggle="tooltip" title="{{ text_learn_more_user_location_helper }}" target="_blank"><i class="fa fa-search"></i> {{ text_check_ip_location }}</a>
+                </td>
+                <td>
+                    {% if ab.customer_info.email %}
+                        <div class="btn-group">
+                          <button type="button" {{ ab.ordered == 1 ? 'disabled' }} class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-envelope-square"></i>&nbsp;{{ text_send_reminder_action }} <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                          	{% for id, template in usable_templates %}
+                                {% if id == 0 %}
+                                	<li class="disabled"><a>{{ template }}</a></li>
+                                {% else %}
+                                  <li><a data-event-id="{{ ab.id }}" style="cursor:pointer;" onClick="sendReminder('{{ ab.id }}', '{{ id }}');">{{ template }}</a></li>
+                                {% endif %}
+                            {% endfor %} 
+                          </ul>
+                        </div>
+                    {% else %}
+					  <a class="btn btn-sm btn-default disabled btn-send" data-toggle="tooltip" title="{{ text_you_cannot_send_helper }}" disabled="disabled"><i class="fa fa-envelope-square"></i> {{ text_send_reminder_action }}</a>
+                    {% endif %}
+                    <br /> <br />
+                    <a onclick="removeItem('{{ ab.id }}')" class="btn btn-sm btn-danger"><i class="fa fa-times"></i> {{ text_remove_button }}</a>
+                    <br /> <br />
+                    <strong> {{ text_ac_status }}</strong> <br />
+                    {{ text_notified }} -> {{ ab.notified ? text_yes ~ ' (' ~ ab.notified ~ ')' : text_no}} <br />
+                    {{ text_ordered }} -> {{ ab.ordered ? text_yes : text_no }}
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    {% else %}
+    	<tr><td colspan="10"><div class="center">{{ text_no_records }}</div></td></tr>
+    {% endif %}
+    <tfoot>
+        <tr>
+            <td colspan="10">
+    	        <div class="row">
+                    <div class="col-sm-6 text-left">{{ pagination }}</div>
+                    <div class="col-sm-6 text-right">{{ results }}</div>
+                    </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

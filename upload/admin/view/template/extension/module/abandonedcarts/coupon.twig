@@ -1,0 +1,117 @@
+<div id="couponsList">
+    <table class="table table-bordered table-hover list">
+        <thead>
+            <tr class="table-header">
+                <td class="left">
+                    {% if sort == 'name' %}
+                    <a href="{{ sort_name }}" class="{{ order|lower }}">{{ column_coupon_name }}</a>
+                    {% else %}
+                    <a href="{{ sort_name }}">{{ column_coupon_name }}</a>
+                    {% endif %}
+                </td>
+                <td class="left">
+                    {% if sort == 'code' %}
+                    <a href="{{ sort_code }}" class="{{ order|lower }}">{{ column_code }}</a>
+                    {% else %}
+                    <a href="{{ sort_code }}">{{ column_code }}</a>
+                    {% endif %}
+                </td>
+                <td class="right">
+                    {% if sort == 'discount' %}
+                    <a href="{{ sort_discount }}" class="{{ order|lower }}">{{ column_discount }}</a>
+                    {% else %}
+                    <a href="{{ sort_discount }}">{{ column_discount }}</a>
+                    {% endif %}
+                </td>
+                <td class="left">
+                    {% if sort == 'date_start' %}
+                    <a href="{{ sort_date_start }}" class="{{ order|lower }}">{{ column_date_start }}</a>
+                    {% else %}
+                    <a href="{{ sort_date_start }}">{{ column_date_start }}</a>
+                    {% endif %}
+                </td>
+                <td class="left">
+                    {% if sort == 'date_end' %}
+                    <a href="{{ sort_date_end }}" class="{{ order }}">{{ column_date_end }}</a>
+                    {% else %}
+                    <a href="{{ sort_date_end }}">{{ column_date_end }}</a>
+                    {% endif %}
+                </td>
+                <td class="left">
+                    {% if sort == 'status' %}
+                    <a href="{{ sort_status }}" class="{{ order }}">{{ column_status }}</a>
+                    {% else %}
+                    <a href="{{ sort_status }}">{{ column_status }}</a>
+                    {% endif %}
+                </td>
+                <td class="left">
+                    {% if sort == 'date_added' %} 
+                    <a href="{{ sort_date_added }}" class="{{ order|lower }}">{{ column_date_added }}</a>
+                    {% else %}
+                    <a href="{{ sort_date_added }}">{{ column_date_added }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        </thead>
+        
+        <tbody>
+          {% if coupons %}
+            {% for coupon in coupons %}
+              <tr>
+                  <td class="left">{{ coupon.name }}</td>
+                  <td class="left">{{ coupon.code }}</td>
+                  <td class="right">{{ coupon.discount }}</td>
+                  <td class="left">{{ coupon.date_start }}</td>
+                  <td class="left">{{ coupon.date_end }}</td>
+                  <td class="left">{{ coupon.status }}</td>
+                  <td class="left">{{ coupon.date_added }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+                <td class="center" colspan="7">{{ text_no_results }}</td>
+            </tr>
+          {% endif %}
+        </tbody>
+    </table>
+    
+    <div class="row">
+        <div class="col-sm-6 text-left">
+            {{ pagination }}
+        </div>
+        
+        <div class="col-sm-6 text-right">
+            {{ results }}
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    $('#couponsList .pagination a').click(function(e){
+		e.preventDefault();
+		$.ajax({
+			url: this.href,
+			type: 'get',
+			dataType: 'html',
+			success: function(data) {				
+				$("#couponsList").html(data);
+			}
+        });
+    });
+});
+   
+$(document).ready(function(){
+	$('#couponsList .list thead tr td a').click(function(e){
+		e.preventDefault();
+		$.ajax({
+			url: this.href,
+			type: 'get',
+			dataType: 'html',
+			success: function(data) {				
+				$("#couponsList").html(data);
+			}
+		});
+	});
+});
+</script>
